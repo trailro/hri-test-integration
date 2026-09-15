@@ -1,4 +1,5 @@
 """HRI Probe 3.0.0: config entry version 2 (migrated from 1), options flow; YAML is no longer read."""
+import imp  # removed from Python in 3.12: fails at import
 import logging
 
 import voluptuous as vol
