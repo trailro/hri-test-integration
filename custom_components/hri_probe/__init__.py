@@ -1,5 +1,7 @@
-"""HRI Probe 3.0.0: config entry version 2 (migrated from 1), options flow; YAML is no longer read."""
+"""HRI Probe 5.0.0: as 3.0.0, plus a hri_probe.stuck service that leaves one executor thread blocked forever
+(test case for a restart with a stuck worker thread)."""
 import logging
+import threading
 
 import voluptuous as vol
 
@@ -10,9 +12,22 @@ PLATFORMS = ["sensor"]
 CONFIG_SCHEMA = vol.Schema({DOMAIN: dict}, extra=vol.ALLOW_EXTRA)
 
 
+_FOREVER = threading.Event()  # never set
+
+
+def _block_forever():
+    _LOGGER.warning("hri_probe.stuck: an executor thread now waits forever")
+    _FOREVER.wait()
+
+
 async def async_setup(hass, config):
     if DOMAIN in config:
         _LOGGER.warning("YAML configuration for hri_probe is no longer read since 3.0.0: remove it")
+
+    async def _stuck(call):
+        hass.async_add_executor_job(_block_forever)  # not awaited: the loop stays free, only the thread is gone
+
+    hass.services.async_register(DOMAIN, "stuck", _stuck)
     return True
 
 

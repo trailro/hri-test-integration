@@ -1,0 +1,3 @@
+stuck:
+  name: Block an executor thread
+  description: Test case - one executor thread waits forever.
