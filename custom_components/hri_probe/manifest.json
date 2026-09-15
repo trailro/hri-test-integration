@@ -9,6 +9,8 @@
   "documentation": "https://github.com/trailro/hri-test-integration",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/trailro/hri-test-integration/issues",
-  "requirements": [],
-  "version": "3.0.0"
+  "requirements": [
+    "docopt==0.6.2"
+  ],
+  "version": "4.3.1"
 }
