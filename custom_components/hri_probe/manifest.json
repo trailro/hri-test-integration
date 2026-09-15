@@ -4,11 +4,11 @@
   "codeowners": [
     "@trailro"
   ],
-  "config_flow": false,
+  "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/trailro/hri-test-integration",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/trailro/hri-test-integration/issues",
   "requirements": [],
-  "version": "1.0.0"
+  "version": "2.0.0"
 }

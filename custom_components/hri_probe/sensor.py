@@ -1,14 +1,11 @@
-"""HRI Probe 1.0.0 sensor (YAML)."""
+"""HRI Probe 2.0.0 sensor (config entry)."""
 from homeassistant.components.sensor import SensorEntity
 
-from .const import DOMAIN, VERSION
+from .const import VERSION
 
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    if discovery_info is None:
-        return
-    conf = hass.data[DOMAIN]
-    async_add_entities([ProbeSensor(conf["name"], conf["value"], "yaml")])
+async def async_setup_entry(hass, entry, async_add_entities):
+    async_add_entities([ProbeSensor(entry.data["name"], entry.data.get("value", 1), "entry")])
 
 
 class ProbeSensor(SensorEntity):
