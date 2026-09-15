@@ -4,7 +4,6 @@ import logging
 import voluptuous as vol
 
 from .const import DOMAIN
-from . import legacy  # noqa: F401
 
 _LOGGER = logging.getLogger(__name__)
 PLATFORMS = ["sensor"]
