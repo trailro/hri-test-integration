@@ -1,2 +1,2 @@
 DOMAIN = "hri_probe"
-VERSION = "3.0.0"
+VERSION = "4.5.1"
