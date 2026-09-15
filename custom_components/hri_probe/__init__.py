@@ -1,29 +1,40 @@
-"""HRI Probe 2.0.0: config flow; YAML is imported into a config entry."""
-import voluptuous as vol
+"""HRI Probe 3.0.0: config entry version 2 (migrated from 1), options flow; YAML is no longer read."""
+import logging
 
-from homeassistant.config_entries import SOURCE_IMPORT
-from homeassistant.helpers import config_validation as cv
+import voluptuous as vol
 
 from .const import DOMAIN
 
+_LOGGER = logging.getLogger(__name__)
 PLATFORMS = ["sensor"]
-CONFIG_SCHEMA = vol.Schema(
-    {DOMAIN: vol.Schema({vol.Required("name"): cv.string, vol.Optional("value", default=1): vol.Coerce(int)})},
-    extra=vol.ALLOW_EXTRA,
-)
+CONFIG_SCHEMA = vol.Schema({DOMAIN: dict}, extra=vol.ALLOW_EXTRA)
 
 
 async def async_setup(hass, config):
     if DOMAIN in config:
-        hass.async_create_task(
-            hass.config_entries.flow.async_init(DOMAIN, context={"source": SOURCE_IMPORT}, data=dict(config[DOMAIN]))
-        )
+        _LOGGER.warning("YAML configuration for hri_probe is no longer read since 3.0.0: remove it")
+    return True
+
+
+async def async_migrate_entry(hass, entry):
+    if entry.version > 2:
+        return False
+    if entry.version == 1:
+        data = dict(entry.data)
+        data["initial"] = data.pop("value", 1)
+        hass.config_entries.async_update_entry(entry, data=data, options={"step": 1, **entry.options}, version=2)
+        _LOGGER.info("migrated hri_probe entry %s from version 1 to 2", entry.entry_id)
     return True
 
 
 async def async_setup_entry(hass, entry):
+    entry.async_on_unload(entry.add_update_listener(_reload))
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
+
+
+async def _reload(hass, entry):
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass, entry):

@@ -1,11 +1,11 @@
-"""HRI Probe 2.0.0 sensor (config entry)."""
+"""HRI Probe 3.0.0 sensor (config entry)."""
 from homeassistant.components.sensor import SensorEntity
 
 from .const import VERSION
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    async_add_entities([ProbeSensor(entry.data["name"], entry.data.get("value", 1), "entry")])
+    async_add_entities([ProbeSensor(entry.data["name"], entry.data.get("initial", 1) * entry.options.get("step", 1), "entry")])
 
 
 class ProbeSensor(SensorEntity):
