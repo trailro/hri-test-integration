@@ -1,4 +1,4 @@
-"""HRI Probe 3.0.0 config flow (entry version 2) and options flow."""
+"""HRI Probe 3.1.0 config flow (entry version 2) and options flow."""
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigFlow, OptionsFlow

@@ -1,4 +1,4 @@
-"""HRI Probe 3.0.0 sensor (config entry)."""
+"""HRI Probe 3.1.0 sensor (config entry)."""
 from homeassistant.components.sensor import SensorEntity
 
 from .const import VERSION

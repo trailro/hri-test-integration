@@ -1,4 +1,4 @@
-"""HRI Probe 3.0.0: config entry version 2 (migrated from 1), options flow; YAML is no longer read."""
+"""HRI Probe 3.1.0: config entry version 2 (migrated from 1), options flow; YAML is no longer read."""
 import logging
 
 import voluptuous as vol
