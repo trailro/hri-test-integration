@@ -63,6 +63,13 @@ echo:
       description: Any JSON object; it comes back in the response.
       selector:
         object:
+    words:
+      name: Words
+      description: A list of strings; an item may contain a comma.
+      example: "Smith, John"
+      selector:
+        text:
+          multiple: true
 
 fail:
   name: Fail

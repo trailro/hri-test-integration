@@ -113,6 +113,10 @@ def advanced_schema():
         vol.Required("tags", default=["core", "custom"]): selector.SelectSelector(
             selector.SelectSelectorConfig(options=["core", "comfort"], multiple=True, custom_value=True)
         ),
+        # a list of strings: an item may hold a comma, so one box split on commas cannot carry it
+        vol.Required("aliases", default=["probe", "Smith, John"]): selector.TextSelector(
+            selector.TextSelectorConfig(multiple=True)
+        ),
         # Home Assistant accepts a fractional duration; a whole-number input cannot submit these
         vol.Optional("grace", default={"hours": 0, "minutes": 0, "seconds": 0.5}): selector.DurationSelector(),
         vol.Optional("lag", default={"hours": 0, "minutes": 1.5, "seconds": 0}): selector.DurationSelector(),

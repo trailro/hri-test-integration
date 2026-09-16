@@ -40,7 +40,8 @@
           "flavour": "Flavour",
           "tags": "Tags",
           "grace": "Grace",
-          "lag": "Lag"
+          "lag": "Lag",
+          "aliases": "Aliases"
         },
         "data_description": {
           "note": "A multiline text selector.",
@@ -55,7 +56,8 @@
           "flavour": "A value outside the list is allowed.",
           "tags": "Typed values are allowed next to the listed ones.",
           "grace": "Half a second: a fractional duration.",
-          "lag": "A minute and a half: a fractional duration."
+          "lag": "A minute and a half: a fractional duration.",
+          "aliases": "One item per box; an item may contain a comma."
         },
         "sections": {
           "limits": {
@@ -190,6 +192,10 @@
         "payload": {
           "name": "Payload",
           "description": "Any JSON object; it comes back in the response."
+        },
+        "words": {
+          "name": "Words",
+          "description": "A list of strings; an item may contain a comma."
         }
       }
     },

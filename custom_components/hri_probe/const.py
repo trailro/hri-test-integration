@@ -1,7 +1,7 @@
 """Shared constants of the hri_probe test integration."""
 
 DOMAIN = "hri_probe"
-VERSION = "7.1.0"
+VERSION = "7.2.0"
 
 # Config flow traps (7.0.0): this name makes the user step abort with "unknown",
 # and only this token gets past the reauth step.
