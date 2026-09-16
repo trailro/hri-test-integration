@@ -196,6 +196,10 @@
         "words": {
           "name": "Words",
           "description": "A list of strings; an item may contain a comma."
+        },
+        "names": {
+          "name": "Names",
+          "description": "A multi-select that takes typed values; an item may contain a comma or surrounding spaces."
         }
       }
     },

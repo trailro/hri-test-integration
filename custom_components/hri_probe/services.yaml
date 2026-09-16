@@ -70,6 +70,17 @@ echo:
       selector:
         text:
           multiple: true
+    names:
+      name: Names
+      description: A multi-select that takes typed values; the example holds items the options do not list, one with a comma and one with surrounding spaces.
+      example: ["alpha", "Smith, John", "  padded  "]
+      selector:
+        select:
+          options:
+            - alpha
+            - beta
+          multiple: true
+          custom_value: true
 
 fail:
   name: Fail
