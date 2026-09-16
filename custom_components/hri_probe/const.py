@@ -12,8 +12,9 @@ NATIVE_PLATFORMS = [
     "switch", "text", "time", "update", "vacuum", "valve", "water_heater",
 ]
 
-# Platforms MQTT has no equivalent for: they must arrive on the consuming side
-# as read-only sensor mirrors (state + attributes, no commands).
+# Platforms hass-remote-integration does not publish natively: they arrive on the consuming
+# side as read-only sensor mirrors (state + attributes, no commands). Home Assistant's MQTT
+# integration does have camera and image platforms; HRI simply does not use them yet.
 MIRRORED_PLATFORMS = [
     "calendar", "camera", "image", "media_player", "remote", "todo", "weather",
 ]

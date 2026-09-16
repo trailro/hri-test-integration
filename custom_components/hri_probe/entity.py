@@ -11,6 +11,7 @@ from homeassistant.core import callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import Entity
+from homeassistant.util import slugify
 
 from .const import DOMAIN, FAMILY_CORE, FAMILY_NAMES, SIGNAL_FLAP, VERSION
 
@@ -30,6 +31,10 @@ class ProbeEntity(Entity):
         self._key = key
         name = probe_name(entry)
         self._attr_name = f"Probe {name} {label}"
+        # Home Assistant composes an entity id from area, device and name, so the device below
+        # would prefix every id. Setting it here keeps the rule in the docstring; the platform
+        # module is named after its domain, which is the domain of the entity it creates.
+        self.entity_id = f"{type(self).__module__.rsplit('.', 1)[-1]}.probe_{slugify(name)}_{slugify(label)}"
         self._attr_unique_id = f"{DOMAIN}_{name}_{key}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{entry.entry_id}_{family}")},
