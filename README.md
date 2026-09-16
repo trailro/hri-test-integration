@@ -13,15 +13,19 @@ to publish, command and call.
 | 2.0.0 | config flow; YAML is imported into a config entry | version 1 (`name`, `value`) | 2024.1.0 |
 | 3.0.0 | config flow + options flow; YAML is no longer read | version 2 (`name`, `initial`, options `step`), migrated from 1 | 2024.1.0 |
 | 3.1.0 | as 3.0.0, but the minimum HA version is raised | version 2 | 2026.9.0 |
-| 4.0.0 | imports `imp`, a module Python removed | version 2 | 2026.9.0 |
-| 4.1.0 | ships `legacy.py` with Python 2 syntax | version 2 | 2026.9.0 |
-| 4.2.1 | requires `netifaces`: C code, no compiler in the image | version 2 | 2026.9.0 |
-| 4.3.1 | requires `docopt`: a pure-Python sdist that builds fine | version 2 | 2026.9.0 |
-| 4.4.1 | requires `aiohttp==3.9.0`: conflicts with Home Assistant's constraints | version 2 | 2026.9.0 |
-| 4.5.1 | requires `scipy`: a heavy wheel | version 2 | 2026.9.0 |
-| 5.0.0 | service `hri_probe.stuck`: blocks one executor thread forever | version 2 | 2026.9.0 |
+| 4.0.0 | imports `imp`, a module Python removed | version 2 | 2024.1.0 |
+| 4.1.0 | ships `legacy.py` with Python 2 syntax | version 2 | 2024.1.0 |
+| 4.2.1 | requires `netifaces`: C code, no compiler in the image | version 2 | 2024.1.0 |
+| 4.3.1 | requires `docopt`: a pure-Python sdist that builds fine | version 2 | 2024.1.0 |
+| 4.4.1 | requires `aiohttp==3.9.0`: conflicts with Home Assistant's constraints | version 2 | 2024.1.0 |
+| 4.5.1 | requires `scipy`: a heavy wheel | version 2 | 2024.1.0 |
+| 5.0.0 | service `hri_probe.stuck`: blocks one executor thread forever | version 2 | 2024.1.0 |
 | 6.0.0 | one entity on every platform Home Assistant has, test services, persistent notifications | version 2 | 2026.9.0 |
 | 7.0.0 | as 6.0.0, plus every config flow shape: a menu, every selector, errors and aborts, reconfigure, reauth, progress, a two-branch options flow | version 3, migrated from 2 (and from 1) | 2026.9.0 |
+
+The 4.x and 5.0.0 releases ask for Home Assistant 2024.1.0, so they run on the
+image's own baseline as well — handy for testing a dependency case without
+updating Home Assistant first. 3.1.0, 6.0.0 and 7.0.0 ask for 2026.9.0.
 
 **Use the `v4.x.1` tags, never `v4.2.0`-`v4.5.0`:** those are contaminated with `legacy.py`, so they
 stop at the syntax blocker instead of reaching the dependency case they were made for.
