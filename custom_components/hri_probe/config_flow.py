@@ -105,6 +105,17 @@ def advanced_schema():
             )
         ),
         vol.Optional("extra", default={"scale": 1}): selector.ObjectSelector(),
+        # a value the options do not list, and a list that takes typed values: a renderer that
+        # only draws the listed options drops these without saying so
+        vol.Required("flavour", default="vanilla"): selector.SelectSelector(
+            selector.SelectSelectorConfig(options=["sweet", "salty"], custom_value=True)
+        ),
+        vol.Required("tags", default=["core", "custom"]): selector.SelectSelector(
+            selector.SelectSelectorConfig(options=["core", "comfort"], multiple=True, custom_value=True)
+        ),
+        # Home Assistant accepts a fractional duration; a whole-number input cannot submit these
+        vol.Optional("grace", default={"hours": 0, "minutes": 0, "seconds": 0.5}): selector.DurationSelector(),
+        vol.Optional("lag", default={"hours": 0, "minutes": 1.5, "seconds": 0}): selector.DurationSelector(),
         # no renderer is obliged to know this one: it is here to find out what happens
         vol.Optional("window", default={"hours": 0, "minutes": 5, "seconds": 0}): selector.DurationSelector(),
         vol.Required("limits"): section(
