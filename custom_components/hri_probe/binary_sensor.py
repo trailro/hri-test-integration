@@ -37,5 +37,5 @@ class ProbeBinarySensor(ProbeEntity, BinarySensorEntity):
 
     @callback
     def _tick(self, n: int) -> None:
-        self._attr_is_on = bool(n % 2)
+        self._attr_is_on = not self._attr_is_on  # every tick, so an even count still moves it
         self.async_write_ha_state()

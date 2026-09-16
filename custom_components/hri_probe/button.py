@@ -29,4 +29,6 @@ class ProbeButton(ProbeEntity, ButtonEntity):
     async def async_press(self) -> None:
         self._presses += 1
         self._attr_extra_state_attributes["presses"] = self._presses
-        # ButtonEntity writes the new timestamp state itself once this returns.
+        # ButtonEntity stamps the timestamp and writes the state BEFORE calling us,
+        # so the new count needs a write of its own.
+        self.async_write_ha_state()
