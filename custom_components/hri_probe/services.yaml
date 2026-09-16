@@ -90,3 +90,13 @@ slow:
 stuck:
   name: Block an executor thread
   description: Test case - one executor thread waits forever.
+
+expire_auth:
+  name: Expire the authentication
+  description: Make the config entry fail authentication, so Home Assistant starts the reauth flow.
+  fields:
+    entry_id:
+      name: Entry id
+      default: ""
+      selector:
+        text:

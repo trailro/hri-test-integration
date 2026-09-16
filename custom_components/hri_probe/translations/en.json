@@ -7,19 +7,127 @@
         "data": {
           "name": "Name",
           "initial": "Initial value"
+        },
+        "data_description": {
+          "name": "Must not start or end with a space; the name \"crash\" aborts the flow with \"unknown\".",
+          "initial": "The value every entity starts from."
+        }
+      },
+      "path": {
+        "title": "How much do you want to configure?",
+        "description": "Basic creates the entry now; advanced asks one question per selector kind; probe waits first.",
+        "menu_options": {
+          "basic": "Basic (create the entry now)",
+          "advanced": "Advanced (every selector)",
+          "probe": "Probe the device first (progress step)"
+        }
+      },
+      "advanced": {
+        "title": "Advanced settings for {name}",
+        "description": "One field per selector shape a flow renderer has to cope with.",
+        "data": {
+          "label": "Label",
+          "note": "Note",
+          "level": "Level",
+          "retries": "Retries",
+          "verbose": "Verbose",
+          "profile": "Profile",
+          "speed": "Speed",
+          "families": "Device families",
+          "extra": "Extra values",
+          "window": "Probe window",
+          "limits": "Limits"
+        },
+        "data_description": {
+          "note": "A multiline text selector.",
+          "level": "A number selector in slider mode.",
+          "retries": "A number selector in box mode.",
+          "profile": "A select selector in dropdown mode; one option has a space in it.",
+          "speed": "A select selector in list mode, with labels of its own.",
+          "families": "A multiple select selector.",
+          "extra": "An object selector: every value must be a number.",
+          "window": "A duration selector, the shape no renderer is obliged to know.",
+          "limits": "A form section: its fields arrive as one nested object."
+        },
+        "sections": {
+          "limits": {
+            "name": "Limits",
+            "description": "A collapsible section inside the form.",
+            "data": {
+              "ceiling": "Ceiling",
+              "strict": "Strict"
+            }
+          }
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure {title}",
+        "description": "Changes the data of the existing entry; the entry itself is kept.",
+        "data": {
+          "initial": "Initial value",
+          "label": "Label"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate HRI Probe",
+        "description": "The token for {name} expired. The only token that works is \"probe-token\".",
+        "data": {
+          "token": "Token"
         }
       }
     },
+    "progress": {
+      "probing": "Probing the device for {seconds} seconds..."
+    },
+    "error": {
+      "invalid_name": "The name must not start or end with a space.",
+      "invalid_object": "Every value in the object must be a number.",
+      "incompatible": "Speed \"fast\" allows at most 5 retries.",
+      "invalid_auth": "That is not the token this probe expects."
+    },
     "abort": {
-      "already_configured": "This name is already configured."
+      "already_configured": "This name is already configured.",
+      "already_in_progress": "A flow for this name is already open.",
+      "unknown": "The flow failed with an error it did not expect.",
+      "reconfigure_successful": "The entry was reconfigured.",
+      "reauth_successful": "The entry was re-authenticated."
     }
   },
   "options": {
     "step": {
       "init": {
         "title": "HRI Probe options",
+        "description": "Two branches, so a renderer meets an options menu as well as a config one.",
+        "menu_options": {
+          "tuning": "Tuning",
+          "reporting": "Reporting"
+        }
+      },
+      "tuning": {
+        "title": "Tuning",
+        "description": "The profile chosen here decides which fields the next step asks for.",
         "data": {
-          "step": "Step"
+          "step": "Step",
+          "profile": "Profile"
+        },
+        "data_description": {
+          "profile": "\"aggressive\" leads to a different second step than the others."
+        }
+      },
+      "tuning_detail": {
+        "title": "Tuning detail ({profile})",
+        "description": "This schema was built from the profile chosen on the previous step.",
+        "data": {
+          "burst": "Burst size",
+          "confirm": "I know what this does",
+          "idle_minutes": "Idle minutes"
+        }
+      },
+      "reporting": {
+        "title": "Reporting",
+        "data": {
+          "channels": "Channels",
+          "include_attributes": "Include attributes"
         }
       }
     }
@@ -49,36 +157,67 @@
       "name": "Persistent notification",
       "description": "Create or dismiss a persistent notification.",
       "fields": {
-        "title": {"name": "Title", "description": "Notification title."},
-        "message": {"name": "Message", "description": "Notification text."},
-        "notification_id": {"name": "Notification id", "description": "Same id replaces the previous notification."},
-        "dismiss": {"name": "Dismiss", "description": "Dismiss the notification with that id instead of creating it."}
+        "title": {
+          "name": "Title",
+          "description": "Notification title."
+        },
+        "message": {
+          "name": "Message",
+          "description": "Notification text."
+        },
+        "notification_id": {
+          "name": "Notification id",
+          "description": "Same id replaces the previous notification."
+        },
+        "dismiss": {
+          "name": "Dismiss",
+          "description": "Dismiss the notification with that id instead of creating it."
+        }
       }
     },
     "echo": {
       "name": "Echo",
       "description": "Answer with the payload it was called with (a service that returns a response).",
       "fields": {
-        "payload": {"name": "Payload", "description": "Any JSON object; it comes back in the response."}
+        "payload": {
+          "name": "Payload",
+          "description": "Any JSON object; it comes back in the response."
+        }
       }
     },
     "fail": {
       "name": "Fail",
       "description": "Raise an error, to check how a failed call is reported.",
       "fields": {
-        "message": {"name": "Message", "description": "Error text."}
+        "message": {
+          "name": "Message",
+          "description": "Error text."
+        }
       }
     },
     "slow": {
       "name": "Slow call",
       "description": "Take longer than the caller's timeout.",
       "fields": {
-        "seconds": {"name": "Seconds", "description": "How long the call takes."}
+        "seconds": {
+          "name": "Seconds",
+          "description": "How long the call takes."
+        }
       }
     },
     "stuck": {
       "name": "Block an executor thread",
       "description": "Test case - one executor thread waits forever."
+    },
+    "expire_auth": {
+      "name": "Expire the authentication",
+      "description": "Make the config entry fail authentication, so Home Assistant starts the reauth flow.",
+      "fields": {
+        "entry_id": {
+          "name": "Entry id",
+          "description": "Which entry; empty means every hri_probe entry."
+        }
+      }
     }
   }
 }

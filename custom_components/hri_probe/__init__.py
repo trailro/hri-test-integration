@@ -1,10 +1,11 @@
-"""HRI Probe 6.0.0: every entity platform Home Assistant has, plus the services a test needs.
+"""HRI Probe 7.0.0: every entity platform Home Assistant has, the services a test needs, and the flows.
 
 The entity platforms cover the service calls a consuming Home Assistant can make (light.turn_on,
 climate.set_temperature, vacuum.start...). The services here are the ones no entity provides:
 driving the entities that have no service of their own, making everything unavailable and back,
 a service that answers, one that fails, one that takes too long, one that creates persistent
-notifications, and the stuck executor thread from 5.0.0.
+notifications, the stuck executor thread from 5.0.0, and hri_probe.expire_auth, which makes the
+entry fail authentication so Home Assistant starts the reauth flow the way it does for real.
 """
 from __future__ import annotations
 
@@ -17,7 +18,7 @@ import voluptuous as vol
 from homeassistant.components import persistent_notification
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, ServiceCall, ServiceResponse, SupportsResponse
-from homeassistant.exceptions import HomeAssistantError
+from homeassistant.exceptions import ConfigEntryAuthFailed, HomeAssistantError
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 
 from .const import DOMAIN, PLATFORMS, SIGNAL_FLAP, SIGNAL_PULSE, SIGNAL_TICK, VERSION
@@ -73,6 +74,16 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     async def _stuck(call: ServiceCall) -> None:
         hass.async_add_executor_job(_block_forever)  # not awaited: the loop stays free, only the thread is gone
 
+    async def _expire_auth(call: ServiceCall) -> None:
+        """Mark the entry unauthenticated and reload it: setup then raises ConfigEntryAuthFailed
+        and Home Assistant starts the reauth flow itself, which is the only way a real one starts."""
+        wanted = call.data["entry_id"]
+        for entry in hass.config_entries.async_entries(DOMAIN):
+            if wanted and entry.entry_id != wanted:
+                continue
+            hass.config_entries.async_update_entry(entry, data={**entry.data, "auth_ok": False})
+            hass.config_entries.async_schedule_reload(entry.entry_id)
+
     text = vol.All(str, vol.Length(max=255))
     for name, handler, schema, response in (
         ("tick", _tick, {vol.Optional("count", default=1): vol.All(int, vol.Range(min=1, max=100))}, None),
@@ -87,6 +98,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
         ("fail", _fail, {vol.Optional("message", default="hri_probe.fail was called"): text}, None),
         ("slow", _slow, {vol.Optional("seconds", default=90): vol.All(int, vol.Range(min=1, max=600))}, None),
         ("stuck", _stuck, {}, None),
+        ("expire_auth", _expire_auth, {vol.Optional("entry_id", default=""): text}, None),
     ):
         kwargs = {"schema": vol.Schema(schema)}
         if response is not None:
@@ -96,18 +108,26 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 
 async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    if entry.version > 2:
+    if entry.version > 3:
         return False
-    if entry.version == 1:
-        data = dict(entry.data)
+    was = entry.version
+    data, options = dict(entry.data), dict(entry.options)
+    if was == 1:
         data["initial"] = data.pop("value", 1)
-        hass.config_entries.async_update_entry(entry, data=data, options={"step": 1, **entry.options}, version=2)
-        _LOGGER.info("migrated hri_probe entry %s from version 1 to 2", entry.entry_id)
+        options.setdefault("step", 1)
+    if was < 3:
+        # 7.0.0 keeps the auth state and the branch the user flow took in the entry
+        data.setdefault("auth_ok", True)
+        data.setdefault("path", "basic")
+        options.setdefault("profile", "balanced")
+    hass.config_entries.async_update_entry(entry, data=data, options=options, version=3)
+    _LOGGER.info("migrated hri_probe entry %s from version %s to 3", entry.entry_id, was)
     return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    entry.async_on_unload(entry.add_update_listener(_reload))
+    if not entry.data.get("auth_ok", True):
+        raise ConfigEntryAuthFailed("the probe token expired; hri_probe.expire_auth was called")
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     # a notification on every setup: it must show up on the consuming side too
     persistent_notification.async_create(
@@ -117,10 +137,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         f"{DOMAIN}_{entry.entry_id}_setup",
     )
     return True
-
-
-async def _reload(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
