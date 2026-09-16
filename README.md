@@ -24,6 +24,7 @@ to publish, command and call.
 | 7.0.0 | as 6.0.0, plus every config flow shape: a menu, every selector, errors and aborts, reconfigure, reauth, progress, a two-branch options flow | version 3, migrated from 2 (and from 1) | 2026.9.0 |
 | 7.1.0 | as 7.0.0, plus the selector shapes a form renderer is most likely to get wrong: a select that takes a typed value, a multi-select whose default holds one, and two fractional durations | version 3 | 2026.9.0 |
 | 7.2.0 | as 7.1.0, plus a text field that takes several values whose default holds an item with a comma (`aliases`), and the same shape on a service (`hri_probe.echo` field `words`) | version 3 | 2026.9.0 |
+| 7.3.0 | as 7.2.0, plus a service multi-select that takes typed values whose example holds an item with a comma and one with surrounding spaces (`hri_probe.echo` field `names`) | version 3 | 2026.9.0 |
 
 The 4.x and 5.0.0 releases ask for Home Assistant 2024.1.0, so they run on the
 image's own baseline as well — handy for testing a dependency case without
