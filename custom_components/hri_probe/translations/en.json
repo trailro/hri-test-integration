@@ -1,0 +1,84 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "HRI Probe",
+        "description": "A test integration: it creates one entity on every platform Home Assistant has.",
+        "data": {
+          "name": "Name",
+          "initial": "Initial value"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This name is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "HRI Probe options",
+        "data": {
+          "step": "Step"
+        }
+      }
+    }
+  },
+  "services": {
+    "tick": {
+      "name": "Tick",
+      "description": "Change the entities that have no service of their own (sensors, binary sensor, event, device tracker).",
+      "fields": {
+        "count": {
+          "name": "Ticks",
+          "description": "How many ticks to send."
+        }
+      }
+    },
+    "flap": {
+      "name": "Flap availability",
+      "description": "Make every hri_probe entity unavailable, then available again.",
+      "fields": {
+        "seconds": {
+          "name": "Seconds",
+          "description": "How long the entities stay unavailable."
+        }
+      }
+    },
+    "notify": {
+      "name": "Persistent notification",
+      "description": "Create or dismiss a persistent notification.",
+      "fields": {
+        "title": {"name": "Title", "description": "Notification title."},
+        "message": {"name": "Message", "description": "Notification text."},
+        "notification_id": {"name": "Notification id", "description": "Same id replaces the previous notification."},
+        "dismiss": {"name": "Dismiss", "description": "Dismiss the notification with that id instead of creating it."}
+      }
+    },
+    "echo": {
+      "name": "Echo",
+      "description": "Answer with the payload it was called with (a service that returns a response).",
+      "fields": {
+        "payload": {"name": "Payload", "description": "Any JSON object; it comes back in the response."}
+      }
+    },
+    "fail": {
+      "name": "Fail",
+      "description": "Raise an error, to check how a failed call is reported.",
+      "fields": {
+        "message": {"name": "Message", "description": "Error text."}
+      }
+    },
+    "slow": {
+      "name": "Slow call",
+      "description": "Take longer than the caller's timeout.",
+      "fields": {
+        "seconds": {"name": "Seconds", "description": "How long the call takes."}
+      }
+    },
+    "stuck": {
+      "name": "Block an executor thread",
+      "description": "Test case - one executor thread waits forever."
+    }
+  }
+}
