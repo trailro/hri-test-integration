@@ -1,7 +1,14 @@
 """Shared constants of the hri_probe test integration."""
 
 DOMAIN = "hri_probe"
-VERSION = "6.0.0"
+VERSION = "7.0.0"
+
+# Config flow traps (7.0.0): this name makes the user step abort with "unknown",
+# and only this token gets past the reauth step.
+CRASH_NAME = "crash"
+REAUTH_TOKEN = "probe-token"
+PROBE_SECONDS = 4  # how long the async_show_progress branch pretends to work
+DEFAULT_OPTIONS = {"step": 1, "profile": "balanced"}
 
 # Platforms Home Assistant's MQTT integration also has, so hass-remote-integration
 # publishes them natively (discovery component + command topics).
