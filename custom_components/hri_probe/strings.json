@@ -36,7 +36,11 @@
           "families": "Device families",
           "extra": "Extra values",
           "window": "Probe window",
-          "limits": "Limits"
+          "limits": "Limits",
+          "flavour": "Flavour",
+          "tags": "Tags",
+          "grace": "Grace",
+          "lag": "Lag"
         },
         "data_description": {
           "note": "A multiline text selector.",
@@ -47,7 +51,11 @@
           "families": "A multiple select selector.",
           "extra": "An object selector: every value must be a number.",
           "window": "A duration selector, the shape no renderer is obliged to know.",
-          "limits": "A form section: its fields arrive as one nested object."
+          "limits": "A form section: its fields arrive as one nested object.",
+          "flavour": "A value outside the list is allowed.",
+          "tags": "Typed values are allowed next to the listed ones.",
+          "grace": "Half a second: a fractional duration.",
+          "lag": "A minute and a half: a fractional duration."
         },
         "sections": {
           "limits": {
