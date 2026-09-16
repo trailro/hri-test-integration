@@ -5,7 +5,9 @@
     "@trailro"
   ],
   "config_flow": true,
-  "dependencies": [],
+  "dependencies": [
+    "camera"
+  ],
   "documentation": "https://github.com/trailro/hri-test-integration",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/trailro/hri-test-integration/issues",
