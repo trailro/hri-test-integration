@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import FAMILY_CORE, SIGNAL_TICK
+from .const import FAMILY_CORE, SIGNAL_PULSE
 from .entity import ProbeEntity
 
 
@@ -23,7 +23,8 @@ async def async_setup_entry(
 
 
 class ProbeBinarySensor(ProbeEntity, BinarySensorEntity):
-    """No service can change a binary sensor, so hri_probe.tick is the only way to move it."""
+    """No service can change a binary sensor, so hri_probe.tick is the only way to move it:
+    it toggles once per call, so any count moves it, not only an odd one."""
 
     _attr_device_class = BinarySensorDeviceClass.MOTION
 
@@ -33,9 +34,9 @@ class ProbeBinarySensor(ProbeEntity, BinarySensorEntity):
 
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
-        self.async_on_remove(async_dispatcher_connect(self.hass, SIGNAL_TICK, self._tick))
+        self.async_on_remove(async_dispatcher_connect(self.hass, SIGNAL_PULSE, self._tick))
 
     @callback
-    def _tick(self, n: int) -> None:
-        self._attr_is_on = not self._attr_is_on  # every tick, so an even count still moves it
+    def _tick(self) -> None:
+        self._attr_is_on = not self._attr_is_on
         self.async_write_ha_state()

@@ -20,7 +20,7 @@ from homeassistant.core import HomeAssistant, ServiceCall, ServiceResponse, Supp
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 
-from .const import DOMAIN, PLATFORMS, SIGNAL_FLAP, SIGNAL_TICK, VERSION
+from .const import DOMAIN, PLATFORMS, SIGNAL_FLAP, SIGNAL_PULSE, SIGNAL_TICK, VERSION
 
 _LOGGER = logging.getLogger(__name__)
 CONFIG_SCHEMA = vol.Schema({DOMAIN: dict}, extra=vol.ALLOW_EXTRA)
@@ -43,6 +43,8 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
         for _ in range(call.data["count"]):
             data["ticks"] += 1
             async_dispatcher_send(hass, SIGNAL_TICK, data["ticks"])
+        # once per call: an entity that toggles would be back where it started after an even count
+        async_dispatcher_send(hass, SIGNAL_PULSE)
 
     async def _flap(call: ServiceCall) -> None:
         """Every entity goes unavailable and comes back: the consumer must show unavailable, not a stale value."""

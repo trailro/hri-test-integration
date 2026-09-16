@@ -35,4 +35,5 @@ FAMILY_NAMES = {
 }
 
 SIGNAL_FLAP = f"{DOMAIN}_flap"  # dispatcher: make every entity unavailable, then available again
-SIGNAL_TICK = f"{DOMAIN}_tick"  # dispatcher: change the entities no service can change
+SIGNAL_TICK = f"{DOMAIN}_tick"  # dispatcher: change the entities no service can change, once per tick
+SIGNAL_PULSE = f"{DOMAIN}_pulse"  # dispatcher: once per hri_probe.tick call, whatever the count
