@@ -95,7 +95,7 @@ arrive, commands do not.
 
 | Service | What it is for |
 |---|---|
-| `hri_probe.tick` | moves the entities that have no service of their own: the sensors, the binary sensor, the event and the tracker |
+| `hri_probe.tick` | moves the entities that have no service of their own: the sensors, the event and the tracker once per tick, and the binary sensor once per call (so any `count` moves it) |
 | `hri_probe.flap` | every entity goes unavailable for a few seconds and comes back |
 | `hri_probe.notify` | creates or dismisses a persistent notification |
 | `hri_probe.echo` | a service that returns a response, so the answer can be followed back through MQTT |
