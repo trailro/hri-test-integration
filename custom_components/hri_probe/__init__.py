@@ -19,6 +19,7 @@ from homeassistant.components import persistent_notification
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, ServiceCall, ServiceResponse, SupportsResponse
 from homeassistant.exceptions import ConfigEntryAuthFailed, HomeAssistantError
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 
 from .const import DOMAIN, PLATFORMS, SIGNAL_FLAP, SIGNAL_PULSE, SIGNAL_TICK, VERSION
@@ -94,7 +95,8 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
             vol.Optional("notification_id", default=f"{DOMAIN}_manual"): text,
             vol.Optional("dismiss", default=False): bool,
         }, None),
-        ("echo", _echo, {vol.Optional("payload", default={}): dict}, SupportsResponse.ONLY),
+        ("echo", _echo, {vol.Optional("payload", default={}): dict,
+                         vol.Optional("words", default=[]): vol.All(cv.ensure_list, [cv.string])}, SupportsResponse.ONLY),
         ("fail", _fail, {vol.Optional("message", default="hri_probe.fail was called"): text}, None),
         ("slow", _slow, {vol.Optional("seconds", default=90): vol.All(int, vol.Range(min=1, max=600))}, None),
         ("stuck", _stuck, {}, None),
