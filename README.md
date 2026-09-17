@@ -24,6 +24,7 @@ to publish, command and call.
 | 7.0.0 | as 6.0.0, plus every config flow shape: a menu, every selector, errors and aborts, reconfigure, reauth, progress, a two-branch options flow | version 3, migrated from 2 (and from 1) | 2026.9.0 |
 | 7.1.0 | as 7.0.0, plus the selector shapes a form renderer is most likely to get wrong: a select that takes a typed value, a multi-select whose default holds one, and two fractional durations | version 3 | 2026.9.0 |
 | 7.2.0 | as 7.1.0, plus a text field that takes several values whose default holds an item with a comma (`aliases`), and the same shape on a service (`hri_probe.echo` field `words`) | version 3 | 2026.9.0 |
+| 7.4.0 | as 7.3.0, plus `text.probe_demo_secret`, a text entity in password mode (a bridge must mask the values it forwards) | version 3 | 2026.9.0 |
 | 7.3.0 | as 7.2.0, plus a service multi-select that takes typed values whose example holds an item with a comma and one with surrounding spaces (`hri_probe.echo` field `names`) | version 3 | 2026.9.0 |
 
 The 4.x and 5.0.0 releases ask for Home Assistant 2024.1.0, so they run on the
@@ -42,7 +43,7 @@ every release and the attributes `source` (yaml, entry) and `version`.
 
 ## 6.0.0: the full surface
 
-One config entry named `demo` creates 40 entities on 34 platforms (27 native, 7 mirrored), split over four devices
+One config entry named `demo` creates 40 entities on 34 platforms (27 native, 7 mirrored; 41 from 7.4.0, which adds a password-mode text), split over four devices
 (`core`, `comfort`, `security`, `media`) so device grouping is exercised too. Every entity is
 named `Probe <entry name> <label>`, so its entity id, and therefore every MQTT topic, follows from
 the entry name.
@@ -82,6 +83,7 @@ HRI publishes these natively, with command topics.
 | `siren.probe_demo_siren` | tone (`slow whoop` has a space), duration and volume |
 | `switch.probe_demo_main` | on and off, with a command counter |
 | `text.probe_demo_note` | set value, 3 to 32 characters |
+| `text.probe_demo_secret` (7.4.0) | password mode, 0 to 64 characters: the value sent must be masked by a bridge |
 | `update.probe_demo_firmware` | install with backup and progress; it re-arms afterwards, so the install is repeatable |
 | `vacuum.probe_demo_bot` | start, pause, stop, return to base, clean spot, locate, fan speed, and `send_command` with its payload kept in an attribute |
 | `valve.probe_demo_position` | open, close, stop and set position |
