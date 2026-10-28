@@ -18,7 +18,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import FAMILY_COMFORT
-from .entity import ProbeEntity
+from .entity import ProbeEntity, set_temperatures
 
 # hvac_action follows the mode, so setting a mode changes two published values at once.
 HVAC_ACTIONS = {
@@ -44,7 +44,6 @@ class ProbeClimate(ProbeEntity, ClimateEntity):
     """Both TARGET_TEMPERATURE and TARGET_TEMPERATURE_RANGE, so either shape of
     climate.set_temperature is accepted."""
 
-    _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_hvac_modes = list(HVACMode)
     _attr_preset_modes = ["none", "eco", "away", "boost"]
     _attr_fan_modes = ["auto", "low", "medium", "high"]
@@ -66,10 +65,8 @@ class ProbeClimate(ProbeEntity, ClimateEntity):
         super().__init__(entry, "climate", "climate", FAMILY_COMFORT)
         self._attr_hvac_mode = HVACMode.HEAT
         self._attr_hvac_action = HVACAction.HEATING
-        self._attr_target_temperature = 21
-        self._attr_target_temperature_high = 24
-        self._attr_target_temperature_low = 18
-        self._attr_current_temperature = 21.5
+        set_temperatures(self, ClimateEntity, temperature_unit=UnitOfTemperature.CELSIUS, target_temperature=21,
+                         target_temperature_high=24, target_temperature_low=18, current_temperature=21.5)
         self._attr_current_humidity = 45
         self._attr_preset_mode = "none"
         self._attr_fan_mode = "auto"
@@ -77,11 +74,11 @@ class ProbeClimate(ProbeEntity, ClimateEntity):
 
     async def async_set_temperature(self, **kwargs: Any) -> None:
         if (temperature := kwargs.get(ATTR_TEMPERATURE)) is not None:
-            self._attr_target_temperature = temperature
+            set_temperatures(self, ClimateEntity, target_temperature=temperature)
         if (high := kwargs.get(ATTR_TARGET_TEMP_HIGH)) is not None:
-            self._attr_target_temperature_high = high
+            set_temperatures(self, ClimateEntity, target_temperature_high=high)
         if (low := kwargs.get(ATTR_TARGET_TEMP_LOW)) is not None:
-            self._attr_target_temperature_low = low
+            set_temperatures(self, ClimateEntity, target_temperature_low=low)
         self.async_write_ha_state()
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:

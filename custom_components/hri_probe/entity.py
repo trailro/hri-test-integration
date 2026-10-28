@@ -16,6 +16,15 @@ from homeassistant.util import slugify
 from .const import DOMAIN, FAMILY_CORE, FAMILY_NAMES, SIGNAL_FLAP, VERSION
 
 
+def set_temperatures(entity: Entity, base: type[Entity], **values: object) -> None:
+    """Set climate / water heater temperatures and their unit under the names this Home Assistant reads.
+    2026.11 renamed them to native_* (the old names log a deprecation until 2027.11); hacs.json still
+    allows 2026.9, which only knows the old ones."""
+    prefix = "_attr_native_" if hasattr(base, "_attr_native_current_temperature") else "_attr_"
+    for name, value in values.items():
+        setattr(entity, prefix + name, value)
+
+
 def probe_name(entry: ConfigEntry) -> str:
     return str(entry.data.get("name") or entry.title or "probe")
 

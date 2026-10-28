@@ -18,7 +18,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import FAMILY_COMFORT
-from .entity import ProbeEntity
+from .entity import ProbeEntity, set_temperatures
 
 
 async def async_setup_entry(
@@ -37,7 +37,6 @@ class ProbeWaterHeater(ProbeEntity, WaterHeaterEntity):
         | WaterHeaterEntityFeature.OPERATION_MODE
         | WaterHeaterEntityFeature.AWAY_MODE
     )
-    _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_min_temp = 35.0
     _attr_max_temp = 65.0
     _attr_target_temperature_step = 0.5
@@ -52,14 +51,14 @@ class ProbeWaterHeater(ProbeEntity, WaterHeaterEntity):
 
     def __init__(self, entry: ConfigEntry) -> None:
         super().__init__(entry, "water_heater_tank", "tank", FAMILY_COMFORT)
-        self._attr_current_temperature = 48.5
-        self._attr_target_temperature = 55.0
+        set_temperatures(self, WaterHeaterEntity, temperature_unit=UnitOfTemperature.CELSIUS,
+                         current_temperature=48.5, target_temperature=55.0)
         self._attr_current_operation = STATE_ECO
         self._attr_is_away_mode_on = False
 
     async def async_set_temperature(self, **kwargs: Any) -> None:
         if (temperature := kwargs.get(ATTR_TEMPERATURE)) is not None:
-            self._attr_target_temperature = temperature
+            set_temperatures(self, WaterHeaterEntity, target_temperature=temperature)
             self.async_write_ha_state()
 
     async def async_set_operation_mode(self, operation_mode: str) -> None:
